@@ -1,27 +1,27 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { 
   auth, db, googleProvider, signInWithPopup, signOut, onAuthStateChanged 
-} from './lib/firebase';
+} from '@/lib/firebase';
 import { 
   collection, doc, onSnapshot, setDoc, deleteDoc, updateDoc, query, where, serverTimestamp, addDoc, orderBy, limit 
 } from 'firebase/firestore';
 import { User } from 'firebase/auth';
 import { FileNode, Project } from './types';
-import { Navbar } from './components/Navbar';
-import { FileExplorer } from './components/FileExplorer';
-import { CodeEditor } from './components/CodeEditor';
-import { LivePreview } from './components/LivePreview';
-import { GlobalChat } from './components/GlobalChat';
+import { Navbar } from '@/components/Navbar';
+import { FileExplorer } from '@/components/FileExplorer';
+import { CodeEditor } from '@/components/CodeEditor';
+import { LivePreview } from '@/components/LivePreview';
+import { GlobalChat } from '@/components/GlobalChat';
 import { Toaster, toast } from 'sonner';
-import { TooltipProvider } from './components/ui/tooltip';
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from './components/ui/resizable';
+import { TooltipProvider } from '@/components/ui/Tooltip';
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { Menu, X, Code2, Globe, MessageSquare } from 'lucide-react';
-import { Button } from './components/ui/button';
-import { Badge } from './components/ui/badge';
-import { cn } from './lib/utils';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 
 import { Files, Play, Settings } from 'lucide-react';
-import { NotificationService } from './lib/NotificationService';
+import { NotificationService } from '@/lib/NotificationService';
 
 const DEFAULT_PROJECT_ID = 'default-project';
 

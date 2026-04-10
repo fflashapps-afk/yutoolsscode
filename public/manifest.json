@@ -1,0 +1,49 @@
+{
+  "short_name": "YuToolss",
+  "name": "yutoolss code studio",
+  "icons": [
+    {
+      "src": "https://picsum.photos/seed/yutoolss/192/192",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://picsum.photos/seed/yutoolss/512/512",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#6366f1",
+  "background_color": "#000000",
+  "shortcuts": [
+    {
+      "name": "Chat",
+      "short_name": "Chat",
+      "description": "Open community chat",
+      "url": "/?screen=community",
+      "icons": [{ "src": "https://picsum.photos/seed/chat/192/192", "sizes": "192x192" }]
+    }
+  ],
+  "widgets": [
+    {
+      "name": "Chat Widget",
+      "short_name": "Chat",
+      "description": "Latest community messages",
+      "tag": "chat-widget",
+      "template": "chat-widget",
+      "ms_ac_template": "chat-widget.json",
+      "data": "chat-widget-data.json",
+      "type": "application/json",
+      "screenshots": [
+        {
+          "src": "https://picsum.photos/seed/widget/400/300",
+          "sizes": "400x300",
+          "type": "image/png",
+          "label": "Chat Widget Preview"
+        }
+      ]
+    }
+  ]
+}

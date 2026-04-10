@@ -1,0 +1,78 @@
+{
+  "entities": {
+    "Project": {
+      "title": "Project",
+      "description": "A code project containing files and folders",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Name of the project" },
+        "ownerId": { "type": "string", "description": "UID of the project owner" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "isPublic": { "type": "boolean", "description": "Whether the project is shared" }
+      },
+      "required": ["name", "ownerId", "createdAt"]
+    },
+    "FileNode": {
+      "title": "FileNode",
+      "description": "A file or folder within a project",
+      "type": "object",
+      "properties": {
+        "projectId": { "type": "string", "description": "ID of the parent project" },
+        "name": { "type": "string", "description": "Name of the file or folder" },
+        "type": { "type": "string", "enum": ["file", "folder"] },
+        "content": { "type": "string", "description": "Content of the file (if type is file)" },
+        "parentId": { "type": "string", "description": "ID of the parent folder (null for root)" },
+        "path": { "type": "string", "description": "Full path for convenience" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["projectId", "name", "type", "updatedAt"]
+    },
+    "User": {
+      "title": "User",
+      "description": "User profile information",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "lastSeen": { "type": "string", "format": "date-time" }
+      },
+      "required": ["email"]
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "A message in the global community chat",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "userPhoto": { "type": "string" },
+        "content": { "type": "string" },
+        "type": { "type": "string", "enum": ["text", "image", "file"] },
+        "fileUrl": { "type": "string" },
+        "fileName": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "content", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/projects/{projectId}": {
+      "schema": "Project",
+      "description": "Top-level projects"
+    },
+    "/projects/{projectId}/files/{fileId}": {
+      "schema": "FileNode",
+      "description": "Files and folders within a project"
+    },
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles"
+    },
+    "/global_chat/{messageId}": {
+      "schema": "ChatMessage",
+      "description": "Global community chat messages"
+    }
+  }
+}

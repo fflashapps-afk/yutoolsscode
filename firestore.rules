@@ -1,0 +1,124 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: projects
+    // Document ID: projectId
+    // Fields:
+    //   - name: string (required)
+    //   - ownerId: string (required, immutable)
+    //   - createdAt: timestamp (required, immutable)
+    //   - updatedAt: timestamp (required)
+    //   - isPublic: bool (optional)
+    //
+    // Collection: projects/{projectId}/files
+    // Document ID: fileId
+    // Fields:
+    //   - projectId: string (required, immutable)
+    //   - name: string (required, 1-255 chars)
+    //   - type: string (required, 'file' or 'folder')
+    //   - content: string (optional, < 1MB)
+    //   - parentId: string (optional)
+    //   - path: string (required)
+    //   - updatedAt: timestamp (required)
+    //
+    // Collection: users
+    // Document ID: userId
+    // Fields:
+    //   - email: string (required)
+    //   - displayName: string (optional)
+    //   - photoURL: string (optional)
+    //   - lastSeen: timestamp (optional)
+    //
+    // ===============================================================
+
+    // Collection: global_chat
+    // Document ID: messageId
+    // Fields:
+    //   - userId: string (required)
+    //   - userName: string (required)
+    //   - userPhoto: string (optional)
+    //   - content: string (required)
+    //   - type: string (required, 'text', 'image', 'file')
+    //   - fileUrl: string (optional)
+    //   - fileName: string (optional)
+    //   - createdAt: timestamp (required)
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isProjectOwner(projectId) {
+      return isAuthenticated() && get(/databases/$(database)/documents/projects/$(projectId)).data.ownerId == request.auth.uid;
+    }
+
+    function isProjectPublic(projectId) {
+      return get(/databases/$(database)/documents/projects/$(projectId)).data.isPublic == true;
+    }
+
+    function isValidProject(data) {
+      return data.name is string && data.name.size() > 0 && data.name.size() <= 100 &&
+             data.ownerId == request.auth.uid;
+    }
+
+    function isValidFile(data) {
+      return data.name is string && data.name.size() > 0 && data.name.size() <= 255 &&
+             data.type in ['file', 'folder'] &&
+             (!('content' in data) || (data.content is string && data.content.size() < 1048576));
+    }
+
+    function isValidChatMessage(data) {
+      return data.userId == request.auth.uid &&
+             data.content is string && data.content.size() > 0 && data.content.size() <= 2000 &&
+             data.type in ['text', 'image', 'file'] &&
+             (!('fileUrl' in data) || (data.fileUrl is string && data.fileUrl.size() < 2097152)); // Limit simulated file size
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && 
+             (request.auth.token.email == "fflashapps@gmail.com" && request.auth.token.email_verified == true);
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner(userId);
+    }
+
+    match /global_chat/{messageId} {
+      allow read: if true; // Allow everyone to see the community chat
+      allow create: if isAuthenticated() && isValidChatMessage(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /projects/{projectId} {
+      allow read: if resource.data.isPublic == true || (isAuthenticated() && (resource.data.ownerId == request.auth.uid || isAdmin()));
+      allow create: if isAuthenticated() && isValidProject(request.resource.data);
+      allow update: if isAuthenticated() && (isProjectOwner(projectId) || isAdmin()) && isValidProject(request.resource.data);
+      allow delete: if isAuthenticated() && (isProjectOwner(projectId) || isAdmin());
+
+      match /files/{fileId} {
+        allow read: if isProjectPublic(projectId) || (isAuthenticated() && (isProjectOwner(projectId) || isAdmin()));
+        allow create: if isAuthenticated() && (isProjectOwner(projectId) || isAdmin()) && isValidFile(request.resource.data);
+        allow update: if isAuthenticated() && (isProjectOwner(projectId) || isAdmin()) && isValidFile(request.resource.data);
+        allow delete: if isAuthenticated() && (isProjectOwner(projectId) || isAdmin());
+      }
+    }
+  }
+}

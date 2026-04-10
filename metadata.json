@@ -1,0 +1,5 @@
+{
+  "name": "yutoolss code studio",
+  "description": "A modern, collaborative visual code editor with live preview and PWA support.",
+  "requestFramePermissions": ["notifications"]
+}

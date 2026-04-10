@@ -13,7 +13,7 @@ import { CodeEditor } from '@/components/CodeEditor';
 import { LivePreview } from '@/components/LivePreview';
 import { GlobalChat } from '@/components/GlobalChat';
 import { Toaster, toast } from 'sonner';
-import { TooltipProvider } from '@/components/ui/Tooltip';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { Menu, X, Code2, Globe, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';

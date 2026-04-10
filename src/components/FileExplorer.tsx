@@ -4,7 +4,7 @@ import { Folder, File, ChevronRight, ChevronDown, Plus, Trash2, Edit2, Upload } 
 import { cn } from '../lib/utils';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/Tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface FileExplorerProps {
   files: FileNode[];

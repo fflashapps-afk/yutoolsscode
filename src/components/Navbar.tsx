@@ -3,7 +3,7 @@ import { User } from 'firebase/auth';
 import { Button } from './ui/button';
 import { LogIn, LogOut, Share2, Code2, Monitor, Smartphone, Bell, MessageSquare, Globe, ShieldCheck } from 'lucide-react';
 import { NotificationService } from '../lib/NotificationService';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/Tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '../lib/utils';
 import { Badge } from './ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
